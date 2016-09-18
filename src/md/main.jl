@@ -1,5 +1,6 @@
 # Molecular Dynamics
 
+include("types.jl")
 include("init.jl")
 
 function main()

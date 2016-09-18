@@ -1,19 +1,3 @@
-type MDStatus
-    x::Vector{Float64}  # Positions
-    v::Vector{Float64}  # Velocities
-    xm::Vector{Float64} # Positoins previouss time step
-    t::Float64          # Time
-end
-
-type MDConfig
-    npart::Int          # Number of particles
-    temp::Float64       # Temperature
-    tmax::Float64       # Max time
-    dt::Float64         # Time step
-    status::MDStatus    # Status
-    rng::AbstractRNG    # RNG
-end
-
 function init(npart, temperature, tmax, dt, lattice_pos, rng=Base.Random.GLOBAL_RNG)
     x = zeros(npart)
     v = zeros(npart)
@@ -21,7 +5,6 @@ function init(npart, temperature, tmax, dt, lattice_pos, rng=Base.Random.GLOBAL_
     status = MDStatus(x, v, xm, 0.0)
     md = MDConfig(npart, temperature, tmax, dt, status, rng)
 
-    x, v = md.status.x, md.status.v
     Σv = 0.0
     Σv² = 0.0
     for i = 1:npart
@@ -40,6 +23,8 @@ function init(npart, temperature, tmax, dt, lattice_pos, rng=Base.Random.GLOBAL_
     md
 end
 
+readfloat() = parse(Float64, readline())
+
 function init()
-    readline()
+    
 end
