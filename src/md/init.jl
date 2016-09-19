@@ -1,4 +1,4 @@
-function init(npart, temperature, tmax, dt, lattice_pos, rng=Base.Random.GLOBAL_RNG)
+function make_config(npart, temperature, tmax, dt, lattice_pos, rng=Base.Random.GLOBAL_RNG)
     x = zeros(npart)
     v = zeros(npart)
     xm = zeros(npart)
@@ -23,8 +23,34 @@ function init(npart, temperature, tmax, dt, lattice_pos, rng=Base.Random.GLOBAL_
     md
 end
 
-readfloat() = parse(Float64, readline())
+using RNG
+
+readparse(fi=STDIN) = parse(readline(fi))
+readint(fi=STDIN) = Int64(readparse(fi))
+readfloat(fi=STDIN) = Float64(readparse(fi))
+readbool(fi=STDIN) = Bool(readparse(fi))
 
 function init()
-    
+    if isempty(ARGS)
+        fi = STDIN
+    else
+        fi = open(ARGS[1])
+    end
+    npart = readint(fi)
+    temperature = readfloat(fi)
+    tmax = readfloat(fi)
+    tequil = readfloat(fi)
+    reqtemp = readfloat(fi)
+    dt = readfloat(fi)
+    scale = readbool(fi)
+    nsamp = readint(fi)
+    ρ = readfloat(fi)
+    rc = readfloat(fi)
+    out_rdf = open(readline(), "w")
+    out_msd = open(readline(), "w")
+    out_st = open(readline(), "w")
+    out_vaf = open(readline(), "w")
+
+    lattice_pos = eval(readparse(fi))
+    rng = eval(readparse(fi))
 end
