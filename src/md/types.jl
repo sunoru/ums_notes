@@ -16,7 +16,8 @@ type MDConfig
     scale::Bool         # Determine whether to use temperature scaling
     nsamp::Int64        # Sample frequency
     ρ::Float64          # Density
-    rc::Float64         # cut-off radius of the potential
+    rc::Float64         # Cut-off radius of the potential
+    box::Float64        # Box length
 
     status::MDStatus    # Status
 

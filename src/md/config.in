@@ -1,0 +1,16 @@
+108     # npart
+0.728   # temp
+0.5     # tmax
+0.0     # tequil
+0.728   # reqtemp
+0.001   # dt
+true    # scale
+1       # nsamp
+0.8442  # rho
+2.5     # rc
+rdf.out
+msd.out
+st.out
+vaf.out
+simple_cubic
+RNG.Xorshifts.Xoroshiro128Plus((0x9d79a69d61d408b8,0x53f0bf63ec7050b8))

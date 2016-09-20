@@ -1,4 +1,5 @@
-function make_config(npart, temperature, tmax, dt, lattice_pos, rng=Base.Random.GLOBAL_RNG)
+function make_config(npart, temperature, tmax, tequil, reqtemp, dt, scale, nsamp, ρ, rc, out_rdf, out_msd,
+        out_st, out_vaf, lattice_pos, rng)
     x = zeros(npart)
     v = zeros(npart)
     xm = zeros(npart)
@@ -53,4 +54,8 @@ function init()
 
     lattice_pos = eval(readparse(fi))
     rng = eval(readparse(fi))
+
+    make_config(npart, temperature, tmax, tequil, reqtemp, dt, scale, nsamp, ρ, rc, out_rdf, out_msd, out_st,
+        out_vaf, lattice_pos, rng)
+
 end
