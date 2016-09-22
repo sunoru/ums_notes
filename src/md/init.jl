@@ -1,27 +1,20 @@
-function make_config(npart, temperature, tmax, tequil, reqtemp, dt, scale, nsamp, ρ, rc, out_rdf, out_msd,
-        out_st, out_vaf, lattice_pos, rng)
-    x = zeros(npart)
-    v = zeros(npart)
-    xm = zeros(npart)
-    status = MDStatus(x, v, xm, 0.0)
-    md = MDConfig(npart, temperature, tmax, dt, status, rng)
+function make_config(npart, tmax, tequil, reqtemp, dt, scale, nsamp, ρ, rc, out_rdf, out_msd,
+        out_st, out_vaf, lattice!, rng)
+    box = (npart / ρ)^(1 / 3)
+    hbox = box / 2
+    rc = min(rc, hbox)
+    rc² = rc^2
+    ecut = 4 * (1 / rc²^6 - 1 / rc²^3)
+    system = MDSystem(npart, tmax, tequil, reqtemp, dt, scale, nsamp, ρ, rc, rc², ecut, box, hbox)
 
-    Σv = 0.0
-    Σv² = 0.0
-    for i = 1:npart
-        x[i] = lattice_pos(i)
-        v[i] = rand(rng, Float64) - 0.5
-        Σv += v[i]
-        Σv² += v[i]^2
-    end
-    Σv /= npart
-    Σv² /= npart
-    fs = √(3temperature / Σv²)
-    for i = 1:npart
-        v[i] = (v[i] - Σv) * fs
-        xm[i] = x[i] - v[i] * dt
-    end
-    md
+    x = zeros(npart, 3)
+    v = zeros(npart, 3)
+    xm = zeros(npart, 3)
+    status = MDStatus(x, v, xm, 0.0, 0, 0.0)
+
+    md = MDConfig(system, status, lattice!, rng, out_rdf, out_msd, out_st, out_vaf)
+
+    return md
 end
 
 using RNG
@@ -38,7 +31,6 @@ function init()
         fi = open(ARGS[1])
     end
     npart = readint(fi)
-    temperature = readfloat(fi)
     tmax = readfloat(fi)
     tequil = readfloat(fi)
     reqtemp = readfloat(fi)
@@ -52,10 +44,14 @@ function init()
     out_st = open(readline(), "w")
     out_vaf = open(readline(), "w")
 
-    lattice_pos = eval(readparse(fi))
+    lattice! = eval(readparse(fi))
     rng = eval(readparse(fi))
 
-    make_config(npart, temperature, tmax, tequil, reqtemp, dt, scale, nsamp, ρ, rc, out_rdf, out_msd, out_st,
-        out_vaf, lattice_pos, rng)
+    md = make_config(npart, tmax, tequil, reqtemp, dt, scale, nsamp, ρ, rc, out_rdf, out_msd, out_st,
+        out_vaf, lattice, rng)
 
+    lattice!(md.status, md)
+    set_velocity!(md.status, md)
+
+    return md
 end
