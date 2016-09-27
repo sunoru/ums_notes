@@ -1,6 +1,6 @@
-function set_velocity!(status::MDStatus, md::MDConfig)
-    v = status.v
-    st = md.system
+function set_velocity!(st::MDStatus, md::MDConfig)
+    v = st.v
+    sys = md.system
     v₀ = zeros(3)
     v² = 0.0
     rand!(md.rng, v)
@@ -14,11 +14,11 @@ function set_velocity!(status::MDStatus, md::MDConfig)
     @inbounds @simd for i = 1:length(v)
         v² += v[i]^2
     end
-    v₀ /= st.npart
+    v₀ /= sys.npart
     v₀t = zeros(3)
-    f = √(3st.npart * st.temperature / v²)
+    f = √(3sys.npart * sys.temperature / v²)
     @inbounds @simd for j = 1:3
-        for i = 1:st.npart
+        for i = 1:sys.npart
             v[i, j] -= v₀[j]
             v[i, j] *= f
         end
@@ -30,8 +30,8 @@ function set_velocity!(status::MDStatus, md::MDConfig)
     @inbounds @simd for i = 1:length(v)
         v² += v[i]^2
     end
-    v² /= 3st.npart
-    v₀t /= st.npart
-    status.temp = v²
+    v² /= 3sys.npart
+    v₀t /= sys.npart
+    st.temp = v²
     return st
 end

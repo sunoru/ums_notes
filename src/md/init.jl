@@ -1,3 +1,7 @@
+include("lattice.jl")
+include("setvel.jl")
+include("init_sample.jl")
+
 function make_config(npart, tmax, tequil, reqtemp, dt, scale, nsamp, ρ, rc, out_rdf, out_msd,
         out_st, out_vaf, lattice!, rng)
     box = (npart / ρ)^(1 / 3)
@@ -10,7 +14,8 @@ function make_config(npart, tmax, tequil, reqtemp, dt, scale, nsamp, ρ, rc, out
     x = zeros(npart, 3)
     v = zeros(npart, 3)
     xm = zeros(npart, 3)
-    status = MDStatus(x, v, xm, 0.0, 0, 0.0)
+    en = MDEnergy(0.0, 0.0, 0.0)
+    status = MDStatus(x, v, xm, 0.0, 0, 0.0, en)
 
     md = MDConfig(system, status, lattice!, rng, out_rdf, out_msd, out_st, out_vaf)
 
@@ -52,6 +57,8 @@ function init()
 
     lattice!(md.status, md)
     set_velocity!(md.status, md)
+
+    init_sample!(md.status.sample, md)
 
     return md
 end

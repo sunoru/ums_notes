@@ -1,7 +1,7 @@
-function simple_cubic!(status::MDStatus, md::MDConfig)
-    x = status.x
-    system = md.system
-    n = Int(floor(system.npart^(1/3))) + 1
+function simple_cubic!(st::MDStatus, md::MDConfig)
+    x = st.x
+    sys = md.system
+    n = Int(floor(sys.npart^(1/3))) + 1
     del = box / n
     itel = 0
     dx = -del
@@ -13,7 +13,7 @@ function simple_cubic!(status::MDStatus, md::MDConfig)
             dz = -del
             for k = 1:n
                 dz += del
-                if itel < system.npart
+                if itel < sys.npart
                     itel += 1
                     x[itel, 1] = dx
                     y[itel, 1] = dy
@@ -22,5 +22,5 @@ function simple_cubic!(status::MDStatus, md::MDConfig)
             end
         end
     end
-    return md
+    return st
 end

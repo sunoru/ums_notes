@@ -1,3 +1,14 @@
+type MDSample
+
+
+end
+
+immutable MDEnergy
+    energy::Float64     # Total energy
+    virial::Float64     # Total Virial
+    kinetic::Float64    # Kinetic energy
+end
+
 type MDStatus
     x::Matrix{Float64}  # Positions
     v::Matrix{Float64}  # Velocities
@@ -5,6 +16,7 @@ type MDStatus
     temp::Float64       # Temperature
     step::Int64         # Step
     t::Float64          # Time
+    energy::MDEnergy    # Total energy
 end
 
 immutable MDSystem
@@ -25,11 +37,11 @@ end
 
 type MDConfig
     system::MDSystem
-    status::MDStatus    # Status
+    status::MDStatus
 
     lattice::Function
+    rng::AbstractRNG
 
-    rng::AbstractRNG    # RNG
     out_rdf::IOStream   # Output file for radial distribution function
     out_msd::IOStream   # Output file for velocity autocorrelation function and mean square displacement
     out_st::IOStream    # Output file for stress tensor
