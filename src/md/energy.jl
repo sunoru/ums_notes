@@ -5,7 +5,7 @@
     virial = 0.0
     for j = jb:sys.npart
         if (j != i)
-            dx = x[i, :] - x[j, :]
+            dx = view(x, i, :) - view(x, j, :)
             dx -= sys.box * round(dx / sys.box)
             r² = dx[1]^2 + dx[2]^2 + dx[3]^2
             if r² <= sys.rc²

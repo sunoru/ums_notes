@@ -7,6 +7,11 @@ true    # scale
 1       # nsamp
 0.8442  # rho
 2.5     # rc
+10      # igr
+10_000_000  # ivacf
+100     # t0vacf
+100_000 # t0stress
+100     # tdifmax
 rdf.out
 msd.out
 st.out

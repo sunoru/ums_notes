@@ -1,6 +1,38 @@
+type MDSampleRDF
+    ngr::Int64
+    nhgr::Int64
+    dg::Float64
+    dgi::Float64
+    tempav::Float64
+    g::Vector{Float64}
+    MDSampleRDF() = new()
+end
+
+type MDSampleST
+    tstress0::Float64
+    dstress_time::Float64
+    sxyz00::Vector{Float64}
+    MDSampleST() = new()
+end
+
+type MDSampleVACF
+    t0::Float64
+    tvacf::Float64
+    dtime::Float64
+    r2t::Vector{Float64}
+    nvacf::Vector{Float64}
+    vacf::Vector{Float64}
+    nstress::Vector{Float64}
+    sxyzt::Matrix{Float64}  # 1 for yz, 2 for xz, 3 for xy.
+    MDSampleVACF() = new()
+end
+
 type MDSample
+    rdf::MDSampleRDF
+    st::MDSampleST
+    vacf::MDSampleVACF
 
-
+    MDSample() = new()
 end
 
 immutable MDEnergy
@@ -16,6 +48,7 @@ type MDStatus
     temp::Float64       # Temperature
     step::Int64         # Step
     t::Float64          # Time
+    force::Matrix{Float64}
     energy::MDEnergy    # Total energy
 end
 
@@ -33,6 +66,11 @@ immutable MDSystem
     ecut::Float64       # Cut-off energy
     box::Float64        # Box length
     hbox::Float64       # Half of box
+    igr::Int64
+    ivacf::Int64
+    t0vacf::Int64
+    t0stress::Int64
+    tdifmax::Int64
 end
 
 type MDConfig
